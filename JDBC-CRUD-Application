@@ -1,0 +1,117 @@
+
+import java.sql.*;
+import java.util.*;
+
+
+public class Practice {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            String url = "jdbc:mysql://localhost:3306/college";
+            String user = "root";
+            String password = "Himu@770";
+
+            Connection con = DriverManager.getConnection(url, user, password);
+            System.out.println("Connected to MySQL!");
+
+            System.out.println("1 -->> INSERT");
+            System.out.println("2 -->> UPDATE");
+            System.out.println("3 -->> RETRIEVE");
+            System.out.println("4 -->> DELETE");
+            System.out.println("5 -->> EXIT");
+
+            int choice = sc.nextInt();
+
+            while (choice != 5) {
+
+                if (choice == 1) {
+
+                    System.out.println("Enter id");
+                    int id = sc.nextInt();
+                    sc.nextLine();
+
+                    System.out.println("Enter name");
+                    String name = sc.nextLine();
+
+                    String query = "insert into student values(?,?)";
+                    PreparedStatement pst = con.prepareStatement(query);
+
+                    pst.setInt(1, id);
+                    pst.setString(2, name);
+
+                    pst.executeUpdate();
+                    System.out.println("Inserted Successfully");
+
+                    pst.close();
+                } else if (choice == 2) {
+
+                    System.out.println("Enter id");
+                    int id = sc.nextInt();
+                    sc.nextLine();
+
+                    System.out.println("Enter name");
+                    String name = sc.nextLine();
+
+                    String query = "update student set name=? where id=?";
+                    PreparedStatement pst = con.prepareStatement(query);
+
+                    pst.setString(1, name);
+                    pst.setInt(2, id);
+
+                    pst.executeUpdate();
+                    System.out.println("Updated Successfully");
+
+                    pst.close();
+                } else if (choice == 3) {
+
+                    String query = "select * from student";
+                    PreparedStatement pst = con.prepareStatement(query);
+
+                    ResultSet rs = pst.executeQuery();
+
+                    while (rs.next()) {
+                        System.out.println("id = " + rs.getInt(1)
+                                + " name = " + rs.getString(2));
+                    }
+
+                    rs.close();
+                    pst.close();
+                } else if (choice == 4) {
+
+                    System.out.println("Enter id");
+                    int id = sc.nextInt();
+
+                    String query = "delete from student where id=?";
+                    PreparedStatement pst = con.prepareStatement(query);
+
+                    pst.setInt(1, id);
+
+                    pst.executeUpdate();
+                    System.out.println("Deleted Successfully");
+
+                    pst.close();
+                } else {
+                    System.out.println("Invalid option");
+                }
+
+                System.out.println("\nEnter choice:");
+                System.out.println("1 INSERT");
+                System.out.println("2 UPDATE");
+                System.out.println("3 RETRIEVE");
+                System.out.println("4 DELETE");
+                System.out.println("5 EXIT");
+
+                choice = sc.nextInt();
+                        }
+                
+                        con.close();
+                        sc.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
